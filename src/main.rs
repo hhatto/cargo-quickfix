@@ -1,5 +1,6 @@
 extern crate rustc_serialize;
 
+use std::thread;
 use std::process::Command;
 use rustc_serialize::json::Json;
 
@@ -10,7 +11,10 @@ fn main() {
     cargo_command.arg("build");
     cargo_command.arg("--message-format").arg("json");
 
-    let target_filename = std::env::args().nth(1).unwrap();
+    let target_filename = match std::env::args().nth(2) {
+        Some(v) => v,
+        None => "".to_string(),
+    };
 
     let output = cargo_command.output().expect("fail");
     if !output.status.success() {
@@ -28,7 +32,7 @@ fn main() {
         let msg = message.get("message").expect(ERRMSG).as_string().expect(ERRMSG);
         let span = message.get("spans").unwrap().as_array().unwrap()[0].as_object().expect(ERRMSG);
         let filename = span.get("file_name").expect(ERRMSG).as_string().expect(ERRMSG);
-        if filename != target_filename {
+        if !target_filename.is_empty() && filename != target_filename {
             continue;
         }
         let line_number = span.get("line_end").expect(ERRMSG);
