@@ -14,7 +14,7 @@ $ cargo install --force
 
 ```
 $ mkdir -p PATH_TO_VIM_SYNTASTIC/syntax_checkers/rust
-$ cp -p PATH_TO_VIM_SYNTASTIC/syntax_checkers/rust/
+$ cp -p vim_syntastic/cargo.vim PATH_TO_VIM_SYNTASTIC/syntax_checkers/rust/
 $ echo "let g:syntastic_rust_checkers = ['cargo']" >> $HOME/.vimrc
 ```
 
