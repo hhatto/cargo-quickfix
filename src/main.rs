@@ -17,7 +17,8 @@ fn main() {
     };
 
     let output = cargo_command.output().expect("fail");
-    if !output.status.success() {
+    let status = output.status;
+    if !status.success() {
         println!("{:?}", output);
     }
 
@@ -41,5 +42,5 @@ fn main() {
         println!("{}", format!("{}:{}:{}: {}: {}", filename, line_number, column_number, level, msg));
     }
 
-    std::process::exit(1);
+    std::process::exit(status.code().unwrap_or(1));
 }
