@@ -5,3 +5,4 @@ authors = ["Hideo Hattori <hattori-h@klab.com>"]
 
 [dependencies]
 rustc-serialize = "^0.3"
+argparse = "^0.2"
