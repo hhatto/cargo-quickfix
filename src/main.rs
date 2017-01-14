@@ -1,23 +1,35 @@
+extern crate argparse;
 extern crate rustc_serialize;
 
 use std::thread;
-use std::process::Command;
+use std::env;
+use std::io::{stdout, stderr};
+use std::process::{Command, exit};
+use argparse::{ArgumentParser, StoreTrue, StoreOption};
 use rustc_serialize::json::Json;
 
 const ERRMSG: &'static str = "invalid json message";
 
 fn main() {
+    let mut target_filename: Option<String> = None;
+    let mut verbose = false;
+
+    {
+        let mut ap = ArgumentParser::new();
+        ap.refer(&mut verbose).add_option(&["--verbose"], StoreTrue, "Verbose output");
+        ap.refer(&mut target_filename).add_argument("target-filename", StoreOption, "Target filename");
+
+        ap.parse(env::args().skip(1).collect(), &mut stdout(), &mut stderr())
+            .map_err(|c| exit(c))
+            .ok();
+    }
+
     let mut cargo_command = Command::new("cargo");
     cargo_command.arg("build");
     cargo_command.arg("--message-format").arg("json");
 
-    let target_filename = match std::env::args().nth(2) {
-        Some(v) => v,
-        None => "".to_string(),
-    };
-
     let output = cargo_command.output().expect("fail");
-    if !output.status.success() {
+    if !output.status.success() && verbose {
         println!("{:?}", output);
     }
 
@@ -32,8 +44,10 @@ fn main() {
         let msg = message.get("message").expect(ERRMSG).as_string().expect(ERRMSG);
         let span = message.get("spans").unwrap().as_array().unwrap()[0].as_object().expect(ERRMSG);
         let filename = span.get("file_name").expect(ERRMSG).as_string().expect(ERRMSG);
-        if !target_filename.is_empty() && filename != target_filename {
-            continue;
+        if let Some(ref target_filename) = target_filename {
+            if target_filename != filename {
+                continue;
+            }
         }
         let line_number = span.get("line_end").expect(ERRMSG);
         let column_number = span.get("column_start").expect(ERRMSG);
