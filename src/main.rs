@@ -1,6 +1,5 @@
 extern crate rustc_serialize;
 
-use std::thread;
 use std::process::Command;
 use rustc_serialize::json::Json;
 
