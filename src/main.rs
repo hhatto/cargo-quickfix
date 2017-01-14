@@ -5,7 +5,6 @@ use std::env;
 use std::io::{stdout, stderr};
 use std::process::{Command, exit};
 use argparse::{ArgumentParser, StoreTrue, StoreOption};
-use std::process::Command;
 use rustc_serialize::json::Json;
 
 const ERRMSG: &'static str = "invalid json message";
