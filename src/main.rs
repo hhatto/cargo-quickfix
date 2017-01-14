@@ -1,23 +1,30 @@
+extern crate argparse;
 extern crate rustc_serialize;
 
 use std::thread;
 use std::process::Command;
+use argparse::{ArgumentParser, Store};
 use rustc_serialize::json::Json;
 
 const ERRMSG: &'static str = "invalid json message";
 
 fn main() {
+    let mut target_filename = "".to_string();
+    let mut verbose = false;
+
+    {
+        let mut ap = ArgumentParser::new();
+        ap.refer(&mut verbose).add_option(&["--verbose"], Store, "Verbose output");
+        ap.refer(&mut target_filename).add_argument("target-filename", Store, "Target filename");
+        ap.parse_args_or_exit();
+    }
+
     let mut cargo_command = Command::new("cargo");
     cargo_command.arg("build");
     cargo_command.arg("--message-format").arg("json");
 
-    let target_filename = match std::env::args().nth(2) {
-        Some(v) => v,
-        None => "".to_string(),
-    };
-
     let output = cargo_command.output().expect("fail");
-    if !output.status.success() {
+    if !output.status.success() && verbose {
         println!("{:?}", output);
     }
 
