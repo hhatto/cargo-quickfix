@@ -39,20 +39,21 @@ fn main() {
         let data = Json::from_str(line).unwrap();
         let obj = data.as_object().unwrap();
         let message = obj.get("message").expect(ERRMSG).as_object().expect(ERRMSG);
-
-        let level = message.get("level").expect(ERRMSG).as_string().expect(ERRMSG);
-        let msg = message.get("message").expect(ERRMSG).as_string().expect(ERRMSG);
-        let span = message.get("spans").unwrap().as_array().unwrap()[0].as_object().expect(ERRMSG);
-        let filename = span.get("file_name").expect(ERRMSG).as_string().expect(ERRMSG);
-        if let Some(ref target_filename) = target_filename {
-            if target_filename != filename {
-                continue;
+        if let Some(span) = message.get("spans").unwrap().as_array().unwrap().first() {
+            let span = span.as_object().expect(ERRMSG);
+            let filename = span.get("file_name").expect(ERRMSG).as_string().expect(ERRMSG);
+            if let Some(ref target_filename) = target_filename {
+                if target_filename != filename {
+                    continue;
+                }
             }
-        }
-        let line_number = span.get("line_end").expect(ERRMSG);
-        let column_number = span.get("column_start").expect(ERRMSG);
+            let level = message.get("level").expect(ERRMSG).as_string().expect(ERRMSG);
+            let msg = message.get("message").expect(ERRMSG).as_string().expect(ERRMSG);
+            let line_number = span.get("line_end").expect(ERRMSG);
+            let column_number = span.get("column_start").expect(ERRMSG);
 
-        println!("{}", format!("{}:{}:{}: {}: {}", filename, line_number, column_number, level, msg));
+            println!("{}", format!("{}:{}:{}: {}: {}", filename, line_number, column_number, level, msg));
+        }
     }
 
     std::process::exit(status.code().unwrap_or(1));
