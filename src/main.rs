@@ -38,7 +38,12 @@ fn main() {
     for line in lines {
         let data = Json::from_str(line).unwrap();
         let obj = data.as_object().unwrap();
-        let message = obj.get("message").expect(ERRMSG).as_object().expect(ERRMSG);
+        let m = obj.get("message");
+        if m.is_none() {
+            continue;
+        }
+        let message = m.unwrap().as_object().expect(ERRMSG);
+
         if let Some(span) = message.get("spans").unwrap().as_array().unwrap().first() {
             let span = span.as_object().expect(ERRMSG);
             let filename = span.get("file_name").expect(ERRMSG).as_string().expect(ERRMSG);
