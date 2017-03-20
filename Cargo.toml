@@ -1,6 +1,6 @@
 [package]
 name = "cargo-quickfix"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Hideo Hattori <hattori-h@klab.com>"]
 
 [dependencies]

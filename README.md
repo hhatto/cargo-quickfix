@@ -1,6 +1,6 @@
 # cargo-quickfix
 
-![cargo-quickfix with vim](https://dl.dropboxusercontent.com/content_link/orrmhoqx5QBnsygkq9NO2CIhxQ5NZvf7k5MnQEEXW01OApHQneXxHY2p31zTgqw9/file "cargo-quickfix with vim")
+![cargo-quickfix with vim](https://i.gyazo.com/031481fb45dc501b39f843a9b6dd5928.gif "cargo-quickfix with vim")
 
 ## Installation and Setup
 
