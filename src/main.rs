@@ -57,7 +57,7 @@ fn main() {
             let line_number = span.get("line_end").expect(ERRMSG);
             let column_number = span.get("column_start").expect(ERRMSG);
 
-            println!("{}", format!("{}:{}:{}: {}: {}", filename, line_number, column_number, level, msg));
+            println!("{}:{}:{}: {}: {}", filename, line_number, column_number, level, msg);
         }
     }
 
