@@ -2,6 +2,10 @@
 
 ![cargo-quickfix with vim](https://i.gyazo.com/031481fb45dc501b39f843a9b6dd5928.gif "cargo-quickfix with vim")
 
+## Requirements
+
+Rust 1.16+
+
 ## Installation and Setup
 
 ```
