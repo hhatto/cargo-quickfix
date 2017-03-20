@@ -24,7 +24,7 @@ fn main() {
     }
 
     let mut cargo_command = Command::new("cargo");
-    cargo_command.arg("build");
+    cargo_command.arg("check");
     cargo_command.arg("--message-format").arg("json");
 
     let output = cargo_command.output().expect("fail");
