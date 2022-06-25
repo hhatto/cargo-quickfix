@@ -1,8 +1,8 @@
-use std::env;
-use std::io::{stdout, stderr};
-use std::process::{Command, exit};
-use argparse::{ArgumentParser, StoreTrue, StoreOption};
+use argparse::{ArgumentParser, StoreOption, StoreTrue};
 use serde_json::Value;
+use std::env;
+use std::io::{stderr, stdout};
+use std::process::{exit, Command};
 
 const ERRMSG: &'static str = "invalid json message";
 
@@ -13,7 +13,8 @@ fn main() {
     {
         let mut ap = ArgumentParser::new();
         ap.refer(&mut verbose).add_option(&["--verbose"], StoreTrue, "Verbose output");
-        ap.refer(&mut target_filename).add_argument("target-filename", StoreOption, "Target filename");
+        ap.refer(&mut target_filename)
+            .add_argument("target-filename", StoreOption, "Target filename");
 
         ap.parse(env::args().skip(1).collect(), &mut stdout(), &mut stderr())
             .map_err(|c| exit(c))
