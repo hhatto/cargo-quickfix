@@ -4,7 +4,7 @@ use std::env;
 use std::io::{stderr, stdout};
 use std::process::{exit, Command};
 
-const ERRMSG: &'static str = "invalid json message";
+static ERRMSG: &str = "invalid json message";
 
 fn main() {
     let mut target_filename: Option<String> = None;
@@ -17,7 +17,7 @@ fn main() {
             .add_argument("target-filename", StoreOption, "Target filename");
 
         ap.parse(env::args().skip(1).collect(), &mut stdout(), &mut stderr())
-            .map_err(|c| exit(c))
+            .map_err(exit)
             .ok();
     }
 
