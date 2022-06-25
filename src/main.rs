@@ -1,11 +1,8 @@
-extern crate argparse;
-extern crate rustc_serialize;
-
 use std::env;
 use std::io::{stdout, stderr};
 use std::process::{Command, exit};
 use argparse::{ArgumentParser, StoreTrue, StoreOption};
-use rustc_serialize::json::Json;
+use serde_json::Value;
 
 const ERRMSG: &'static str = "invalid json message";
 
@@ -36,7 +33,7 @@ fn main() {
     let stdout = output.stdout;
     let lines = std::str::from_utf8(&stdout).unwrap().lines();
     for line in lines {
-        let data = Json::from_str(line).unwrap();
+        let data: Value = serde_json::from_str(line).unwrap();
         let obj = data.as_object().unwrap();
         let m = obj.get("message");
         if m.is_none() {
@@ -46,14 +43,14 @@ fn main() {
 
         if let Some(span) = message.get("spans").unwrap().as_array().unwrap().first() {
             let span = span.as_object().expect(ERRMSG);
-            let filename = span.get("file_name").expect(ERRMSG).as_string().expect(ERRMSG);
+            let filename = span.get("file_name").expect(ERRMSG);
             if let Some(ref target_filename) = target_filename {
                 if target_filename != filename {
                     continue;
                 }
             }
-            let level = message.get("level").expect(ERRMSG).as_string().expect(ERRMSG);
-            let msg = message.get("message").expect(ERRMSG).as_string().expect(ERRMSG);
+            let level = message.get("level").expect(ERRMSG);
+            let msg = message.get("message").expect(ERRMSG);
             let line_number = span.get("line_end").expect(ERRMSG);
             let column_number = span.get("column_start").expect(ERRMSG);
 
