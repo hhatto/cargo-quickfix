@@ -31,9 +31,6 @@ jobs:
           components: clippy
           override: true
 
-      - name: Install required cargo
-        run: cargo install clippy-sarif sarif-fmt
-
       - name: clippy
         uses: actions-rs/clippy-check@v1
         with:
